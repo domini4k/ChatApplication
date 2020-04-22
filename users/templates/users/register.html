@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type=text/css href="{% static '/users/style.css' %}" />
+    <title>ChatApp</title>
+</head>
+
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="register-page">
+            <div class="head">Welcome to ChatApp</div>
+              <div class="form">
+                <form class="login-form">
+                  <div class="username">Username{{ form.username }}</div>
+                  <div class="password">Password{{ form.password }}</div>
+                  <div class="password-confirm">Confirm password{{ form.password_confirm }}</div>
+                  <button>create</button>
+                  <p class="message">Already registered? <a href="../login/">Login</a></p>
+                </form>
+              </div>
+        </div>
+    </form>a
+</body>
+
+</html>
