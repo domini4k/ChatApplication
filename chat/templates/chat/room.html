@@ -21,72 +21,51 @@
 
 <body>
   <div id="frame">
-<!--    <div id="sidepanel">-->
-<!--      <div id="profile">-->
-<!--        <div class="wrap">-->
-<!--          <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />-->
-<!--          <p>Mike Ross</p>-->
+    <div id="sidepanel">
+      <div id="profile">
+        <div class="wrap">
+          <img id="profile-img" src="https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_960_720.png" class="online" alt="" />
+          <p>{{ username|slice:"1:-1" }}</p>
 <!--          <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>-->
-<!--          <div id="status-options">-->
-<!--            <ul>-->
-<!--              <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>-->
-<!--              <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>-->
-<!--              <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>-->
-<!--              <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--          <div id="expanded">-->
-<!--            <label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>-->
-<!--            <input name="twitter" type="text" value="mikeross" />-->
-<!--            <label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>-->
-<!--            <input name="twitter" type="text" value="ross81" />-->
-<!--            <label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>-->
-<!--            <input name="twitter" type="text" value="mike.ross" />-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+          <div id="status-options">
+            <ul>
+              <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
+              <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
+              <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
+              <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+            </ul>
+          </div>
+        </div>
+      </div>
 <!--      <div id="search">-->
 <!--        <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>-->
 <!--        <input type="text" placeholder="Search contacts..." />-->
 <!--      </div>-->
-<!--      <div id="contacts">-->
-<!--        <ul>-->
-<!--          <li class="contact">-->
-<!--            <div class="wrap">-->
-<!--              <span class="contact-status online"></span>-->
-<!--              <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />-->
-<!--              <div class="meta">-->
-<!--                <p class="name">Louis Litt</p>-->
-<!--                <p class="preview">You just got LITT up, Mike.</p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </li>-->
-<!--          <li class="contact active">-->
-<!--            <div class="wrap">-->
-<!--              <span class="contact-status busy"></span>-->
-<!--              <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />-->
-<!--              <div class="meta">-->
-<!--                <p class="name">Harvey Specter</p>-->
-<!--                <p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </li>-->
-<!--        </ul>-->
-<!--      </div>-->
-<!--      <div id="bottom-bar">-->
-<!--        <button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Add contact</span></button>-->
-<!--        <button id="settings"><i class="fa fa-cog fa-fw" aria-hidden="true"></i> <span>Settings</span></button>-->
-<!--      </div>-->
-<!--    </div>-->
+      <div id="contacts">
+        <ul>
+          {% for room_name, last_message in conv_list %}
+          <li class="contact" >
+            <a href="../{{ room_name }}">
+            <div class="wrap">
+              <div class="meta">
+                <p class="name">{{ room_name }}</p>
+                <p class="preview">{{ last_message }}</p>
+              </div>
+            </div>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div id="bottom-bar">
+        <a href="../">
+        <button id="addcontact"><i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> <span>Another room</span></button>
+        </a>
+      </div>
+    </div>
     <div class="content">
       <div class="contact-profile">
-        <img src="https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_960_720.png" alt="" />
-        <p>{{ username }}</p>
-<!--        <div class="social-media">-->
-<!--          <i class="fa fa-facebook" aria-hidden="true"></i>-->
-<!--          <i class="fa fa-twitter" aria-hidden="true"></i>-->
-<!--          <i class="fa fa-instagram" aria-hidden="true"></i>-->
-<!--        </div>-->
+        <p> Room: {{room_name_json|slice:"1:-1" }}</p>
       </div>
       <div class="messages">
         <ul id="chat-log">
@@ -116,7 +95,7 @@
         '/ws/chat/' + roomName + '/');
 
     chatSocket.onopen = function(e) {
-      fetchMessages();
+      fetchMessages(roomName);
     }
 
     chatSocket.onmessage = function(e) {
@@ -146,35 +125,41 @@
         chatSocket.send(JSON.stringify({
             'command': 'new_message',
             'message': message,
-            'from': username
+            'from': username,
+            'conv_name': roomName
         }));
 
         messageInputDom.value = '';
     };
 
     function fetchMessages() {
-      chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
+      chatSocket.send(JSON.stringify({
+      'command': 'fetch_messages',
+      'conv_name': roomName }));
     }
 
     function createMessage(data) {
-      var author = data['author'];
-      var msgListTag = document.createElement('li');
-      var imgTag = document.createElement('img');
-      var pTag = document.createElement('p');
-      var pTagDate = document.createElement('p3');
-      pTag.textContent = data.content;
-      pTagDate.textContent = data.timestamp.slice(0,19);
-      imgTag.src = 'https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_960_720.png';
+      var conv_name = data['conv_name'];
+      if (conv_name === roomName) {
+          var author = data['author'];
+          var msgListTag = document.createElement('li');
+          var imgTag = document.createElement('img');
+          var pTag = document.createElement('p');
+          var pTagDate = document.createElement('p3');
+          pTag.textContent = data.content;
+          pTagDate.textContent = data.timestamp.slice(0,19);
+          imgTag.src = 'https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_960_720.png';
 
-      if (author === username) {
-        msgListTag.className = 'sent';
-      } else {
-        msgListTag.className = 'replies';
-      }
-      msgListTag.appendChild(imgTag);
-      msgListTag.appendChild(pTag);
-      msgListTag.appendChild(pTagDate);
-      document.querySelector('#chat-log').appendChild(msgListTag);
+          if (author === username) {
+            msgListTag.className = 'sent';
+          } else {
+            msgListTag.className = 'replies';
+          }
+          msgListTag.appendChild(imgTag);
+          msgListTag.appendChild(pTag);
+          msgListTag.appendChild(pTagDate);
+          document.querySelector('#chat-log').appendChild(msgListTag);
+    }
     }
 
 </script>

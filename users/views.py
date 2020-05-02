@@ -50,3 +50,7 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect('/login')
+
+
+def start_page(request):
+    return redirect('/login')

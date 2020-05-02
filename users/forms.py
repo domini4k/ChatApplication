@@ -17,7 +17,7 @@ class UserLoginForm(forms.Form):
         if username and password:
             user = authenticate(username=username, password=password)
             if not user:
-                raise forms.ValidationError('Invalid username or password. Try again')
+                raise forms.ValidationError('Invalid username or password. Try again', code='invalid')
         return super(UserLoginForm, self).clean(*args, **kwargs)
 
 
@@ -39,8 +39,8 @@ class UserRegisterForm(forms.ModelForm):
         password = self.cleaned_data.get('password')
         password_confirm = self.cleaned_data.get('password_confirm')
         if password != password_confirm:
-            raise forms.ValidationError('Passwords must match')
+            raise forms.ValidationError('Passwords must match', code='match')
         username_qs = User.objects.filter(username=username)
         if username_qs.exists():
-            raise forms.ValidationError('This username is being used. Try again')
+            raise forms.ValidationError('This username is being used. Try again', code='used')
         return super(UserRegisterForm, self).clean()
