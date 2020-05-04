@@ -20,10 +20,14 @@
 
     <script>
         document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#room-name-input').onkeydown = function(e) {
+            
+            if (e.which === 13 || e.keyCode === 13) {  // enter, return
+                e.preventDefault();
                 document.querySelector('#room-name-submit').click();
+                return false;
             }
+            return true;
         };
 
         document.querySelector('#room-name-submit').onclick = function(e) {

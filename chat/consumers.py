@@ -7,6 +7,14 @@ from .models import Message, Room
 User = get_user_model()
 
 
+# All functions below represent how the app acts with data received and how it sends
+# data further. After opening the page JavaScript sends request to fetch last 10 messages.
+# All messages have certain parameters such as author, content, name of the conversation and
+# timestamp which is created automatically.
+# Dictionaries and json format are very useful in this particular part of the app, it is very
+# convenient to use them to send the data.
+# For more information how to use Django Channels check documentation and tutorial:
+# https://channels.readthedocs.io/en/latest/tutorial/part_1.html
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):

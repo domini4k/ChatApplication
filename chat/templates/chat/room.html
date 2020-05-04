@@ -2,16 +2,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-<!--    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet' type='text/css'>-->
-<!--    <script src="https://use.typekit.net/hoy3lrg.js"></script>-->
-<!--    <script>try{Typekit.load({ async: true });}catch(e){}</script>-->
-<!--    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
-<!--    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>-->
-<!--    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
-
-<!--    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>-->
-<!--    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
-
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
@@ -26,29 +16,17 @@
         <div class="wrap">
           <img id="profile-img" src="https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_960_720.png" class="online" alt="" />
           <p>{{ username|slice:"1:-1" }}</p>
-<!--          <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>-->
-          <div id="status-options">
-            <ul>
-              <li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
-              <li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
-              <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
-              <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
-            </ul>
-          </div>
         </div>
       </div>
-<!--      <div id="search">-->
-<!--        <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>-->
-<!--        <input type="text" placeholder="Search contacts..." />-->
-<!--      </div>-->
       <div id="contacts">
         <ul>
-          {% for room_name, last_message in conv_list %}
+          {% for room_name, last_author, last_message in conv_list %}
           <li class="contact" >
             <a href="../{{ room_name }}">
             <div class="wrap">
               <div class="meta">
-                <p class="name">{{ room_name }}</p>
+                <p class="name">Room: {{ room_name }}</p>
+                <p class="author">{{ last_author}}:</p>
                 <p class="preview">{{ last_message }}</p>
               </div>
             </div>
@@ -66,6 +44,7 @@
     <div class="content">
       <div class="contact-profile">
         <p> Room: {{room_name_json|slice:"1:-1" }}</p>
+        <button onclick="location.href='../../logout'" type="button">Logout</button>
       </div>
       <div class="messages">
         <ul id="chat-log">
@@ -75,7 +54,6 @@
       <div class="message-input">
         <div class="wrap">
         <input id="chat-message-input" type="text" placeholder="Write your message..." />
-<!--        <i class="fa fa-paperclip attachment" aria-hidden="true"></i>-->
         <button id="chat-message-submit" class="submit">
           <i class="fa fa-paper-plane" aria-hidden="true"></i>
         </button>
@@ -87,6 +65,10 @@
 <script src="{% static 'main.js' %}"></script>
 <script src="{% static 'reconnecting-websocket.js' %}"></script>
 <script>
+
+<!--        This JavaScript helps to send and properly show messages.-->
+<!--        Using dictionaries, it is easy to send command for the server side  -->
+
     var roomName = {{ room_name_json }};
     var username = {{ username }};
 
@@ -145,8 +127,10 @@
           var msgListTag = document.createElement('li');
           var imgTag = document.createElement('img');
           var pTag = document.createElement('p');
+          var pTagAuthor = document.createElement('p2');
           var pTagDate = document.createElement('p3');
           pTag.textContent = data.content;
+          pTagAuthor.textContent = data.author;
           pTagDate.textContent = data.timestamp.slice(0,19);
           imgTag.src = 'https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824147_960_720.png';
 
@@ -156,6 +140,7 @@
             msgListTag.className = 'replies';
           }
           msgListTag.appendChild(imgTag);
+          msgListTag.appendChild(pTagAuthor);
           msgListTag.appendChild(pTag);
           msgListTag.appendChild(pTagDate);
           document.querySelector('#chat-log').appendChild(msgListTag);

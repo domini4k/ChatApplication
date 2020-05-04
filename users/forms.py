@@ -6,6 +6,10 @@ from django.contrib.auth import (
 User = get_user_model()
 
 
+# These forms are used to authenticate and register users.
+# There are a few exceptions added to validate proper data for example:
+# if User is trying to use username which is being use an exception occurs.
+# In this particular part of app the "super()" function is being used.
 class UserLoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)

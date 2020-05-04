@@ -2,11 +2,9 @@ from django.shortcuts import render, redirect, reverse
 from .forms import UserLoginForm, UserRegisterForm
 from django.contrib.auth import (
     authenticate,
-    get_user_model,
     login,
     logout
 )
-from chat import views
 
 
 def login_view(request):
