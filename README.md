@@ -2,18 +2,20 @@
 Hi!
 Thank you for visiting my project.
 To use:
-1.Iinstall PyCharm, clone or download all the files from the last commit.
-2. Put all the files except "venv" to directory "basedir" inside directory in PycharmProjects. 
-Like this: ..\PycharmProjects\<name of your app>\basedir
-3. Open project with PyCharm
-4. In the terminal type: pip install django
-5. Then type: pip install channels
+1. Install PyCharm, clone or download all the files from the last commit.
+2. Open project with PyCharm
+3. In the terminal type: pip install -r reqiurements.txt
+4. Then type: cd ChatApplication
 6. Install redis on your computer and add it to path.
+If you are on Windows you can use this:
+https://chocolatey.org/install
+https://chocolatey.org/packages/redis-64/3.0.501
 7. In the terminal window type: redis-server
 8. Open new terminal window on PyCharm and type: python manage.py runserver
 9. Click the link and enjoy!
+Create new user, log in and then pick room you want to use. You can use another incognito tab to log in as a different user, pick the same room and chat with each other.
 
-You can use and change the code as you want. I was using Python 3.6
+You can use and change the code as you want. I was using Python 3.7
 
 This is project of chatting application. After user creates account, he can choose the room to enter and chat with others. 
 There is useful sidebar where all the user's conversations are listed and can easily be entered by one click.
