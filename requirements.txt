@@ -18,7 +18,7 @@ daphne==2.5.0
 distlib==0.3.0
 dj-config-url==0.1.1
 dj-database-url==0.5.0
-Django==3.0.5
+Django==3.1.9
 django-heroku==0.3.1
 django-redis==4.12.1
 django-redis-cache==2.1.1
