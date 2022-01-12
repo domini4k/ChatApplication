@@ -34,7 +34,7 @@ incremental==17.5.0
 kombu==4.6.11
 msgpack==1.0.0
 msgpack-python==0.5.6
-pipenv==2018.11.26
+pipenv==2022.1.8
 psycopg2==2.8.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
